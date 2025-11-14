@@ -61,7 +61,7 @@ This repository supports both **CLI (Command Line Interface)** and **Jupyter Not
 
 ### Installation
 ```bash
-git clone [https://github.com/ksssoyu/diffusion-structure-disentanglement.git](https://github.com/ksssoyu/diffusion-structure-disentanglement.git)
+git clone https://github.com/ksssoyu/diffusion-structure-disentanglement.git
 cd diffusion-structure-disentanglement
 pip install -r requirements.txt
 ```
