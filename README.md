@@ -64,8 +64,6 @@ We investigated the temporal characteristics of the diffusion process by injecti
 
 ## 🚀 Usage
 
-This repository supports both **CLI (Command Line Interface)** and **Jupyter Notebooks**.
-
 ### Installation
 ```bash
 git clone https://github.com/ksssoyu/diffusion-structure-disentanglement.git
