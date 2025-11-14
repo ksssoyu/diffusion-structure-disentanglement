@@ -6,14 +6,14 @@
 
 > **"Can we change the object identity (e.g., Cat → Tiger) while strictly preserving its pose and layout?"**
 
-This project investigates the internal representations of Text-to-Image Diffusion Models. By selectively injecting attention maps from a source generation into a target generation, we demonstrate that **Self-Attention** layers govern the geometric structure (spatial layout, pose), while **Cross-Attention** layers control the semantic content and style.
+This project investigates the internal representations of Text-to-Image Diffusion Models. By selectively injecting attention maps from a source generation into a target generation, demonstrate that **Self-Attention** layers govern the geometric structure (spatial layout, pose), while **Cross-Attention** layers control the semantic content and style.
 
 ---
 
 ## 🖼️ Teaser Results
 
 ### Structure-Aware Semantic Editing (Cat → Tiger)
-We transform a source cat into a tiger. Notice how the **pose, head orientation, and paw positions** are perfectly preserved, even though the semantic identity has changed.
+Transform a source cat into a tiger. Notice how the **pose, head orientation, and paw positions** are perfectly preserved, even though the semantic identity has changed.
 
 ![Teaser Result](assets/teaser_tiger.png)
 *(Left: Source Image | **Center: Self-Attention Injection (Ours)** | Right: Cross-Attention Injection)*
@@ -24,7 +24,7 @@ We transform a source cat into a tiger. Notice how the **pose, head orientation,
 
 ## 🧪 Methodology
 
-We introduce `GradualInjectionProcessor`, a custom attention processor that allows fine-grained control over the U-Net's information flow.
+Introduce `GradualInjectionProcessor`, a custom attention processor that allows fine-grained control over the U-Net's information flow.
 
 ### The Hypothesis
 * **Self-Attention (`attn1`):** Captures spatial relationships within the image (Structure, Layout, Shape).
@@ -33,7 +33,7 @@ We introduce `GradualInjectionProcessor`, a custom attention processor that allo
 ### The Algorithm
 1.  **Inversion/Generation (Source):** Generate the source image and cache the Attention Maps ($M_{source}$) from specific layers.
 2.  **Injection (Target):** During the generation of the target prompt, replace the target's Attention Maps with $M_{source}$ for the initial $T$ steps (Injection Threshold).
-3.  **Memory Optimization:** To enable high-resolution analysis on limited resources (e.g., Colab), we implemented a selective caching mechanism that skips computationally expensive maps ($64 \times 64$) without compromising structural fidelity.
+3.  **Memory Optimization:** To enable high-resolution analysis on limited resources (e.g., Colab), implemented a selective caching mechanism that skips computationally expensive maps ($64 \times 64$) without compromising structural fidelity.
 
 ---
 
@@ -47,8 +47,10 @@ Changing the texture to metallic/robotic while keeping the biological form.
 * **Cross-Attn Only:** The structure collapses into a generic sci-fi creature.
 
 ### 2. Layer-wise Ablation (Cat → Pixel Art)
+
+Analyzed which U-Net blocks (Down, Mid, Up) contribute most to structural preservation.
+
 ![Pixel Experiment](assets/exp_pixel.png)
-We analyzed which U-Net blocks (Down, Mid, Up) contribute most to structural preservation.
 * **Up-Blocks (Decoder):** Found to be the most critical for determining the final spatial layout and fine-grained details.
 
 ---
