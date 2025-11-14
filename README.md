@@ -53,6 +53,13 @@ Analyzed which U-Net blocks (Down, Mid, Up) contribute most to structural preser
 ![Pixel Experiment](assets/exp_pixel.png)
 * **Up-Blocks (Decoder):** Found to be the most critical for determining the final spatial layout and fine-grained details.
 
+### 3. Temporal Dynamics (When is structure determined?)
+We investigated the temporal characteristics of the diffusion process by injecting attention maps at different denoising intervals.
+
+![Temporal Experiment](assets/exp_temporal.png)
+
+* **Early Injection (0~40%):** The layout and pose are preserved, confirming that **global structure is determined in the early denoising steps**.
+* **Late Injection (60~100%):** The structure is not preserved, and the model generates a generic object. This suggests that later steps focus on refining high-frequency details (texture) rather than global geometry.
 ---
 
 ## 🚀 Usage
