@@ -79,10 +79,11 @@ pip install -r requirements.txt
 
 ```bash
 # Convert Cat to Tiger (Preserving Pose)
+# Inject Self-Attention from 0% to 80% of steps
 python main.py --experiment_type attention \
   --prompt_a "A photo of a cute cat looking at the camera, highly detailed" \
   --prompt_b "A tiger sitting on the floor, wild animal photography" \
-  --threshold 0.8
+  --start 0.0 --end 0.8
 ```
 
 **Experiment 2: Style Transfer (Layer-wise Analysis)**
@@ -90,7 +91,17 @@ python main.py --experiment_type attention \
 ```bash
 # Convert Cat to Pixel Art
 python main.py --experiment_type layer \
-  --prompt_b "A pixel art character of a cat, 8-bit style"
+  --prompt_b "A pixel art character of a cat, 8-bit style" \
+  --start 0.0 --end 0.8
+```
+
+**Experiment 3: Temporal Dynamics (Time-step Analysis)**
+
+```bash
+# Investigate when the structure is determined (Early vs Late)
+python main.py --experiment_type attention \
+  --prompt_b "A pixel art character of a cat" \
+  --start 0.0 --end 0.4  # Early Injection
 ```
 
 ---
