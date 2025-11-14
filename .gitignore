@@ -1,0 +1,12 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Results
+results/
+
+# Mac OS system file
+.DS_Store
