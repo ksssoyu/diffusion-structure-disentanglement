@@ -47,6 +47,7 @@ Changing the texture to metallic/robotic while keeping the biological form.
 * **Cross-Attn Only:** The structure collapses into a generic sci-fi creature.
 
 ### 2. Layer-wise Ablation (Cat → Pixel Art)
+![Pixel Experiment](assets/exp_pixel.png)
 We analyzed which U-Net blocks (Down, Mid, Up) contribute most to structural preservation.
 * **Up-Blocks (Decoder):** Found to be the most critical for determining the final spatial layout and fine-grained details.
 
