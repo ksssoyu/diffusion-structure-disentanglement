@@ -60,6 +60,13 @@ We investigated the temporal characteristics of the diffusion process by injecti
 
 * **Early Injection (0~40%):** The layout and pose are preserved, confirming that **global structure is determined in the early denoising steps**.
 * **Late Injection (60~100%):** The structure is not preserved, and the model generates a generic object. This suggests that later steps focus on refining high-frequency details (texture) rather than global geometry.
+
+### 4. Head-wise Analysis (What defines structure?)
+Further analysis is enabled by the `--inject_heads` argument. We can investigate if all self-attention heads contribute equally to structure.
+
+- **Hypothesis**: Within a single SA layer (e.g., 8 heads), some heads might specialize in global pose ("pose heads") while others focus on local texture or details ("texture heads").
+- **Experiment**: By injecting only a subset of SA heads, we can identify the minimal set of heads required to preserve the structural integrity of the source image.
+
 ---
 
 ## 🚀 Usage
@@ -100,6 +107,18 @@ python main.py --experiment_type layer \
 python main.py --experiment_type attention \
   --prompt_b "A pixel art character of a cat" \
   --start 0.0 --end 0.4  # Early Injection
+```
+
+**Experiment 4: Advanced Head-wise Injection**
+
+```bash
+# Convert Cat to Tiger, but ONLY inject Self-Attention heads 0, 2, and 4
+# This tests if these specific heads are sufficient for pose preservation.
+python main.py --experiment_type attention \
+  --prompt_a "A photo of a cute cat looking at the camera, highly detailed" \
+  --prompt_b "A tiger sitting on the floor, wild animal photography" \
+  --start 0.0 --end 0.8 \
+  --inject_heads 0 2 4
 ```
 
 ---
