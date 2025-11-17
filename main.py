@@ -21,6 +21,15 @@ def parse_args():
     parser.add_argument("--experiment_type", type=str, default="attention", choices=["layer", "attention"], 
                         help="Choose experiment type: 'layer' (Up/Down blocks) or 'attention' (Self/Cross attn)")
     
+    # 헤드 단위 주입을 위한 인자 추가
+    parser.add_argument(
+        "--inject_heads",
+        type=int,
+        nargs="+",  # +는 하나 이상의 인자를 리스트로 받음
+        default=None,
+        help="List of SA/CA head indices to inject (e.g., 0 2 4). If not set, injects all heads."
+    )
+    
     parser.add_argument("--output_dir", type=str, default="./output", help="Directory to save results")
     
     return parser.parse_args()
@@ -33,6 +42,9 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
     
     print(f"Loading Stable Diffusion (Experiment: {args.experiment_type})...")
+    if args.inject_heads:
+        print(f"Injecting ONLY specific heads: {args.inject_heads}")
+        
     pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16).to(device)
     pipe.safety_checker = None
     
@@ -76,6 +88,7 @@ def main():
     for cond_key, label in conditions:
         print(f" -> Processing: {label}...")
         
+        # 맵 복사
         maps_to_inject = [m.clone() for m in stored_maps]
         
         for name, module in pipe.unet.named_modules():
@@ -90,7 +103,6 @@ def main():
                     elif cond_key == "mid" and "mid_block" in name: should_inject_layer = True
                     elif cond_key == "up" and "up_blocks" in name: should_inject_layer = True
                     
-                    # 타겟이 아니면 주입 구간을 0.0 ~ 0.0으로 설정
                     current_start = args.start if should_inject_layer else 0.0
                     current_end = args.end if should_inject_layer else 0.0
                     
@@ -99,13 +111,14 @@ def main():
                     current_end = args.end
                     target_mode = cond_key 
 
-                # Processor 부착 (start/end 사용)
                 module.processor = GradualInjectionProcessor(
                     inject_controller=maps_to_inject,
                     start_ratio=current_start,
                     end_ratio=current_end,
                     layer_name=name,
-                    mode=target_mode
+                    mode=target_mode,
+                    # args.inject_heads 값을 processor에 전달
+                    inject_head_indices=args.inject_heads 
                 )
 
         generator = torch.Generator(device).manual_seed(args.seed)
@@ -115,7 +128,13 @@ def main():
             img = pipe(args.prompt_b, generator=generator, num_inference_steps=args.steps, 
                        callback=lambda s, t, l: increment_step_count(pipe) or l, callback_steps=1).images[0]
             
-            filename = f"result_{args.experiment_type}_{cond_key}.png"
+            # 파일 이름에 헤드 정보 추가
+            filename_suffix = ""
+            if args.inject_heads:
+                # [0, 2, 4] -> "_h0-2-4"
+                filename_suffix = f"_h{'-'.join(map(str, args.inject_heads))}"
+
+            filename = f"result_{args.experiment_type}_{cond_key}{filename_suffix}.png"
             img.save(os.path.join(args.output_dir, filename))
             print(f"    Saved: {filename}")
             
