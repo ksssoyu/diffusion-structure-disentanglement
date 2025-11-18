@@ -4,9 +4,11 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C)](https://pytorch.org/)
 [![Diffusers](https://img.shields.io/badge/🤗%20Diffusers-Stable%20Diffusion-yellow)](https://huggingface.co/docs/diffusers/index)
 
+**📝 This repository is maintained for research recording and reference purposes.**
+
 > **"Can we change the object identity (e.g., Cat → Tiger) while strictly preserving its pose and layout?"**
 
-This project investigates the internal representations of Text-to-Image Diffusion Models. By selectively injecting attention maps from a source generation into a target generation, demonstrate that **Self-Attention** layers govern the geometric structure (spatial layout, pose), while **Cross-Attention** layers control the semantic content and style.
+This project investigates the internal representations of Text-to-Image Diffusion Models. By selectively injecting attention maps from a source generation into a target generation, demonstrate that Self-Attention layers govern the geometric structure (spatial layout, pose), while Cross-Attention layers control the semantic content and style.
 
 ---
 
@@ -127,12 +129,10 @@ python main.py --experiment_type attention \
 
 ```bash
 .
-├── assets/                  # Result images for README
-├── output/                  # Generated experiment results
 ├── src/
-│   ├── processor.py         # Core Logic: GradualInjectionProcessor (Memory Optimized)
-│   └── utils.py             # Helper functions (Visualization, Step counting)
-├── main.py                  # Main execution script (CLI support)
-├── requirements.txt         # Dependencies
-└── README.md                # Project Documentation
+│   ├── processor.py      
+│   └── utils.py         
+├── main.py                
+├── requirements.txt 
+└── README.md        
 ```
